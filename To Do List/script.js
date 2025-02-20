@@ -15,6 +15,7 @@ const addToDo = () => {
 
     if (addBtn.value == "Edit") {
         editToDo.target.previousElementSibling.innerHTML = inputText;
+        editLocalToDos(inputText);
         addBtn.value = "Add";
         inputBox.value = "";
     }
@@ -88,12 +89,12 @@ const getLocalToDos = () => {
     }
     else {
         toDos = JSON.parse(localStorage.getItem("toDos"));
-        toDos.forEach(todo => {
+        toDos.forEach(toDo => {
 
-            //Creating a p tag
+            //Creating p tag
             const li = document.createElement("li");
             const p = document.createElement("p");
-            p.innerHTML = toDos;
+            p.innerHTML = toDo;
             li.appendChild(p);
 
             // Creating Edit Button
@@ -112,12 +113,12 @@ const getLocalToDos = () => {
 
             toDoList.appendChild(li);
 
-        })
+        });
     }
 
 }
 
-//Function to delete local toDos
+//Function to delete local toDo
 const deleteLocalToDos = (toDo) => {
     let toDos;
     if (localStorage.getItem("toDos") == null) {
@@ -127,8 +128,20 @@ const deleteLocalToDos = (toDo) => {
         toDos = JSON.parse(localStorage.getItem("toDos"));
     }
 
-    let toDoText = toDo;
-    console.log(toDoText.children[0].innerHTML);
+    let toDoText = toDo.children[0].innerHTML;
+    let toDoIndex = toDos.indexOf(toDoText);
+    toDos.splice(toDoIndex, 1);
+    localStorage.setItem("toDos",JSON.stringify(toDos));
+    console.log(toDoIndex);
+}
+
+//Function to Edit local toDo
+const editLocalToDos = (toDo) => {
+    let toDos = JSON.parse(localStorage.getItem("toDos"));
+    let toDoIndex = toDos.indexOf(toDo);
+    toDos[toDoIndex] = inputBox.value;
+    localStorage.setItem("toDos",JSON.stringify(toDos));
+
 }
 
 document.addEventListener('DOMContentLoaded',getLocalToDos);
